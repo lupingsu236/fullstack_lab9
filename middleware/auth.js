@@ -7,16 +7,12 @@ const auth = async (req, res, next) => {
     try {
         const data = jwt.verify(token, process.env.JWT_KEY); 
         console.log("Verified: ", data);
-        req.user_id = data._id;
-        req.token = token; 
-        
-        const user = await User.findOne({ _id: data._id });
-        if (!user) {
-            throw new Error();
-        }
-        req.user = user;
+        //add new attribute user to req object
+        //don't call db to get user object here 
+        //as not every endpoint that needs auth will need user object
+        req.user = data;
         next();
-        
+
     } catch (error) {
         console.log(JSON.stringify(error));
         console.log(error.stack);

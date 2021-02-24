@@ -36,8 +36,14 @@ router.post("/users/login", async (req, res) => {
 });
 
 
-router.get("/users/profile", auth, (req, res) => {
-    res.send(`Profile: ${JSON.stringify(req.user)}`);
+router.get("/users/profile", auth, async (req, res) => {
+    const user = await User.findById(req.user._id);
+    if (!user) {
+        res.status(404).send(`User not found`);
+    }
+    
+    res.send(`Profile: ${user}`);
+    
 });
 
 module.exports = router;
